@@ -1,14 +1,106 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
     <title>主頁(第一個網頁)</title>
-  </head>
-  <body>
-    <h1>嗨！我不知道我是誰</h1>
-    <h2>但這是我的網頁的主頁</h2>
-    <p>連結1 ： <a href="about-me.html"><strong>自我介紹🫡</strong></a></p>
-    <p>連結2 ： <a href="fake_google.html"><strong>遇到問題怎麼辦❓</strong></a></p>
-    <p>連結3 ： <a href="表格.html"><strong>就是練習表格的而已😁</strong></a></p>
-    <p>連結4 ： <a href="表單.html"><strong>就是練習表單的而已😁</strong></a></p>
-  </body>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- 漂浮光球 -->
+    <div class="bg-circle c1"></div>
+    <div class="bg-circle c2"></div>
+
+    <!-- 粒子背景 -->
+    <div id="particles-js"></div>
+
+    <div class="container">
+
+        <div>
+
+            <h1>嗨！我不知道我是誰 👋</h1>
+
+            <h2>但這是我的網頁的主頁</h2>
+
+            <div class="card">
+
+                <p class="item">
+                    連結1：
+                    <a href="about-me.html">自我介紹🫡2.0</a>
+                </p>
+
+                <p class="item">
+                    連結2：
+                    <a href="fake_google.html">遇到問題怎麼辦❓</a>
+                </p>
+
+                <p class="item">
+                    連結3：
+                    <a href="表格.html">就是練習表格的而已😁</a>
+                </p>
+
+                <p class="item">
+                    連結4：
+                    <a href="表單.html">就是練習表單的而已😁</a>
+                </p>
+                <p class="item">
+                    連結5：
+                    <a href="book.html">超級棒的書👍</a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script>
+
+        particlesJS("particles-js", {
+
+            particles: {
+
+                number: {
+                    value: 90
+                },
+
+                color: {
+                    value: "#ffffff"
+                },
+
+                shape: {
+                    type: "circle"
+                },
+
+                opacity: {
+                    value: 0.5
+                },
+
+                size: {
+                    value: 3
+                },
+
+                move: {
+                    enable: true,
+                    speed: 1.2
+                },
+
+                line_linked: {
+                    enable: true,
+                    opacity: 0.2,
+                    color: "#ffffff"
+                }
+
+            }
+
+        });
+
+    </script>
+
+</body>
+
 </html>

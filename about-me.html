@@ -1,41 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>李ｏ德的小卡片(自我介紹)</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>The Refrigerator Chronicles</title>
+
+<link rel="stylesheet" href="book.css">
+
+<script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.min.js"></script>
+
 </head>
+
+
 <body>
-    <h1>hi,我是李ｏ德</h1>
-    <h2>about me</h2>
-    <p>我今年應該是12歲吧，來自台灣</p>
-    <p>沒什麼好說的 :D</p>
-    <img src="自畫像.png" alt="我的自畫像" width="100">
-    <hr>
-    <h2>我的興趣</h2>
-    <ul>
-        <li>🎮遊戲
-            <ul>
-                <li>minecraft!!!!!</li>
-                <li>roblox</li>
-            </ul>
-        </li>
-    </ul>   
-    <ul>
-        <li>🎶聽音樂</li>
-    </ul>
-    <ul>
-        <li>🚫杜絕運動</li>
-    </ul>
-    <form>
-        <p>
-            <label for="msg">想推薦給我的東西：</label><br>
-            <textarea id="msg" rows="1" cols="20" placeholder="留個訊息..."></textarea><button type="submit">送出</button>
-        </p>
-    </form>
-    <br>
-    <br>
-    <p><a href="index.html"><em><strong>返回主頁🔙</strong></em></a></p>
+
+
+<!-- Back to home button -->
+
+<a class="home-button" href="index.html">
+    🔙 返回主頁
+</a>
+
+
+
+<div class="book-area">
+
+
+    <div id="book">
+
+
+        <!-- COVER -->
+
+        <div class="page cover">
+
+            <div class="cover-inner">
+
+                <h1>
+                    The Refrigerator Chronicles
+                </h1>
+
+                <p>
+                    A Completely Serious History Of Objects That Should Not Exist
+                </p>
+
+                <span>
+                    Written by The Department of Invisible Furniture
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- TITLE PAGE -->
+
+        <div class="page">
+
+            <div class="page-content">
+
+                <h2>
+                    The Refrigerator Chronicles
+                </h2>
+
+
+                <p>
+                    This important document explains the relationship between
+                    paper, furniture, weather, sandwiches, and several confused
+                    objects that accidentally became alive.
+                </p>
+
+
+                <p>
+                    All events in this book are completely accurate according
+                    to the opinions of three spoons and one disappointed chair.
+                </p>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- JAVASCRIPT WILL ADD PAGES HERE -->
+
+        <div id="generated-pages"></div>
+
+
+
+        <!-- BACK COVER -->
+
+        <div class="page cover">
+
+
+            <div class="cover-inner">
+
+
+                <h1>
+                    The End
+                </h1>
+
+
+                <p>
+                    Unless the refrigerator remembers another chapter.
+                </p>
+
+
+            </div>
+
+
+        </div>
+
+
+
+    </div>
+
+
+</div>
+
+
+
+<script src="book.js"></script>
+
 
 </body>
+
 </html>
