@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS // SYSTEM CONTROL</title>
+
+    <link rel="stylesheet" href="cool.css">
+</head>
+
+<body>
+
+    <!-- 背景網格 -->
+    <div class="background-grid"></div>
+    <div class="scanlines"></div>
+
+    <!-- 頂部導航 -->
+    <header class="topbar">
+        <div class="brand">
+            <span class="brand-dot"></span>
+            NEXUS
+            <small>INTELLIGENT SYSTEM</small>
+        </div>
+
+        <div class="system-status">
+            <span class="status-light"></span>
+            SYSTEM ONLINE
+        </div>
+
+        <div class="clock" id="clock">
+            00:00:00
+        </div>
+    </header>
+
+    <!-- 主畫面 -->
+    <main class="dashboard">
+
+        <!-- 左側 -->
+        <aside class="sidebar">
+
+            <div class="profile-card">
+                <div class="avatar">
+                    NX
+                </div>
+
+                <div class="profile-info">
+                    <strong>OPERATOR</strong>
+                    <span>LEVEL 09</span>
+                </div>
+            </div>
+
+            <nav class="menu">
+
+                <button class="menu-item active" data-panel="overview">
+                    <span>◈</span>
+                    OVERVIEW
+                </button>
+
+                <button class="menu-item" data-panel="analytics">
+                    <span>◉</span>
+                    ANALYTICS
+                </button>
+
+                <button class="menu-item" data-panel="network">
+                    <span>⌁</span>
+                    NETWORK
+                </button>
+
+                <button class="menu-item" data-panel="security">
+                    <span>◇</span>
+                    SECURITY
+                </button>
+
+                <button class="menu-item" data-panel="system">
+                    <span>⚙</span>
+                    SYSTEM
+                </button>
+
+            </nav>
+
+            <div class="sidebar-footer">
+                <div>NODE: NX-7731</div>
+                <div>UPTIME: <span id="uptime">00:00:00</span></div>
+            </div>
+
+        </aside>
+
+
+        <!-- 中間主要內容 -->
+        <section class="content">
+
+            <div class="page-title">
+                <div>
+                    <span class="eyebrow">NEXUS CONTROL NETWORK</span>
+                    <h1>SYSTEM OVERVIEW</h1>
+                </div>
+
+                <button class="action-button" id="scanButton">
+                    RUN SYSTEM SCAN
+                </button>
+            </div>
+
+
+            <!-- 狀態卡片 -->
+            <section class="stats">
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>CORE LOAD</span>
+                        <span class="green">STABLE</span>
+                    </div>
+
+                    <div class="stat-value">
+                        <span id="coreLoad">37</span>%
+                    </div>
+
+                    <div class="progress">
+                        <div id="coreBar" style="width:37%"></div>
+                    </div>
+
+                    <small>PROCESSING CAPACITY</small>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>MEMORY</span>
+                        <span class="blue">ACTIVE</span>
+                    </div>
+
+                    <div class="stat-value">
+                        <span id="memory">64</span>%
+                    </div>
+
+                    <div class="progress blue-bar">
+                        <div id="memoryBar" style="width:64%"></div>
+                    </div>
+
+                    <small>NEURAL MEMORY MATRIX</small>
+                </div>
+
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span>NETWORK</span>
+                        <span class="green">CONNECTED</span>
+                    </div>
+
+                    <div class="stat-value">
+                        <span id="network">842</span>
+                        <small>Mbps</small>
+                    </div>
+
+                    <div class="network-wave">
+                        <i></i>
+                        <i></i>
+                        <i></i>
+                        <i></i>
+                        <i></i>
+                        <i></i>
+                        <i></i>
+                        <i></i>
+                    </div>
+
+                    <small>DATA THROUGHPUT</small>
+                </div>
+
+            </section>
+
+
+            <!-- 主視覺區 -->
+            <section class="main-grid">
+
+                <!-- 核心反應爐 -->
+                <div class="panel reactor-panel">
+
+                    <div class="panel-title">
+                        <span>◉ CORE REACTOR</span>
+                        <span class="live">● LIVE</span>
+                    </div>
+
+                    <div class="reactor">
+
+                        <div class="reactor-ring ring-1"></div>
+                        <div class="reactor-ring ring-2"></div>
+                        <div class="reactor-ring ring-3"></div>
+
+                        <div class="reactor-core">
+                            <span id="corePercent">98.7</span>
+                            <small>CORE</small>
+                        </div>
+
+                    </div>
+
+                    <div class="reactor-data">
+                        <div>
+                            <span>TEMPERATURE</span>
+                            <strong id="temperature">724 K</strong>
+                        </div>
+
+                        <div>
+                            <span>PRESSURE</span>
+                            <strong id="pressure">1.42 MPa</strong>
+                        </div>
+
+                        <div>
+                            <span>STABILITY</span>
+                            <strong class="green">99.98%</strong>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <!-- 即時數據 -->
+                <div class="panel telemetry-panel">
+
+                    <div class="panel-title">
+                        <span>TELEMETRY</span>
+                        <span id="telemetryStatus">LIVE FEED</span>
+                    </div>
+
+                    <div class="chart" id="chart">
+
+                        <div class="chart-line"></div>
+
+                        <div class="chart-bars">
+                            <span style="height:35%"></span>
+                            <span style="height:52%"></span>
+                            <span style="height:42%"></span>
+                            <span style="height:68%"></span>
+                            <span style="height:55%"></span>
+                            <span style="height:76%"></span>
+                            <span style="height:63%"></span>
+                            <span style="height:82%"></span>
+                            <span style="height:58%"></span>
+                            <span style="height:91%"></span>
+                            <span style="height:72%"></span>
+                            <span style="height:84%"></span>
+                        </div>
+
+                    </div>
+
+                    <div class="telemetry-values">
+
+                        <div>
+                            <span>CPU</span>
+                            <strong id="cpu">42.7%</strong>
+                        </div>
+
+                        <div>
+                            <span>GPU</span>
+                            <strong id="gpu">68.3%</strong>
+                        </div>
+
+                        <div>
+                            <span>I/O</span>
+                            <strong id="io">12.8 GB/s</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- 下方資訊 -->
+            <section class="bottom-grid">
+
+                <!-- 活動紀錄 -->
+                <div class="panel activity-panel">
+
+                    <div class="panel-title">
+                        <span>SYSTEM ACTIVITY</span>
+                        <button id="clearLog">CLEAR</button>
+                    </div>
+
+                    <div class="activity-list" id="activityList">
+
+                        <div class="activity">
+                            <span class="activity-time">12:42:17</span>
+                            <span class="activity-dot green-dot"></span>
+                            <span>Core synchronization completed</span>
+                        </div>
+
+                        <div class="activity">
+                            <span class="activity-time">12:41:53</span>
+                            <span class="activity-dot blue-dot"></span>
+                            <span>Network node NX-08 connected</span>
+                        </div>
+
+                        <div class="activity">
+                            <span class="activity-time">12:40:21</span>
+                            <span class="activity-dot green-dot"></span>
+                            <span>Memory optimization completed</span>
+                        </div>
+
+                        <div class="activity">
+                            <span class="activity-time">12:39:44</span>
+                            <span class="activity-dot yellow-dot"></span>
+                            <span>Background protocol updated</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- 安全 -->
+                <div class="panel security-panel">
+
+                    <div class="panel-title">
+                        <span>SECURITY</span>
+                        <span class="green">SECURE</span>
+                    </div>
+
+                    <div class="security-score">
+
+                        <div class="score-circle">
+                            <strong id="securityScore">97</strong>
+                            <span>SCORE</span>
+                        </div>
+
+                        <div class="security-info">
+                            <div>
+                                <span>FIREWALL</span>
+                                <strong>ACTIVE</strong>
+                            </div>
+
+                            <div>
+                                <span>THREATS</span>
+                                <strong class="green">0</strong>
+                            </div>
+
+                            <div>
+                                <span>ENCRYPTION</span>
+                                <strong>AES-4096</strong>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <button class="security-button" id="securityCheck">
+                        INITIATE SECURITY CHECK
+                    </button>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+    <!-- 彈出通知 -->
+    <div class="notification" id="notification">
+
+        <div class="notification-icon">
+            ✓
+        </div>
+
+        <div>
+            <strong id="notificationTitle">
+                SYSTEM MESSAGE
+            </strong>
+
+            <span id="notificationText">
+                Operation completed.
+            </span>
+        </div>
+
+    </div>
+
+
+    <!-- 掃描畫面 -->
+    <div class="scan-overlay" id="scanOverlay">
+
+        <div class="scan-box">
+
+            <div class="scan-circle">
+                <div class="scan-inner"></div>
+            </div>
+
+            <h2>SYSTEM SCANNING</h2>
+
+            <p id="scanText">
+                Initializing diagnostic protocol...
+            </p>
+
+            <div class="scan-progress">
+                <div id="scanProgress"></div>
+            </div>
+
+            <span id="scanPercent">0%</span>
+
+        </div>
+
+    </div>
+
+
+    <script src="cool.js"></script>
+    <p><a href="index.html"><em><strong>返回主頁🔙</strong></em></a></p>
+</body>
+</html>

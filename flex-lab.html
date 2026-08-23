@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8">
+    <title>Flex 排隊練習場</title>
+    <style>
+        .row {
+        display: flex;
+        background-color: #f1f5f9;
+        border-radius: 8px;
+        padding: 6px;
+        }
+
+        .row_2 {
+        display: flex;
+        background-color: #f1f5f9;
+        border-radius: 8px;
+        padding: 50px;
+        }
+
+        .box {
+        width: 44px;
+        height: 44px;
+        background-color: #86efac;
+        border-radius: 8px;
+        text-align: center;
+        line-height: 44px;
+        }
+
+
+
+        .label {
+        margin: 10px 0 4px;
+        font-size: 12px;
+        color: #64748b;
+        font-family: monospace;
+        }
+
+        .tall {
+        height: 64px;
+        line-height: 64px;
+        }
+    </style>
+  </head>
+  <body>
+    <p class="label">flex-start（預設）</p>
+    <div class="row" style="justify-content: flex-start;">
+    <div class="box">1</div><div class="box">2</div><div class="box">3</div>
+    </div>
+
+    <p class="label">center</p>
+    <div class="row" style="justify-content: center;">
+    <div class="box">1</div><div class="box">2</div><div class="box">3</div>
+    </div>
+
+    <p class="label">flex-end</p>
+    <div class="row" style="justify-content: flex-end;">
+    <div class="box">1</div><div class="box">2</div><div class="box">3</div>
+    </div>
+    
+    <p class="label">space-between</p>
+    <div class="row" style="justify-content: space-between;">
+    <div class="box">1</div><div class="box">2</div><div class="box">3</div>
+    </div>
+    
+    <p class="label">space-around</p>
+    <div class="row" style="justify-content: space-around;">
+    <div class="box">1</div><div class="box">2</div><div class="box">3</div>
+    </div>
+
+    <p class="label">center（上下置中）</p>
+    <div class="row" style="align-items: center;">
+    <div class="box">1</div><div class="box tall">2</div><div class="box">3</div>
+    </div>
+
+    <p class="label">flex-start（貼上面）</p>
+    <div class="row" style="align-items: flex-start;">
+    <div class="box">1</div><div class="box tall">2</div><div class="box">3</div>
+    </div>
+
+    <p class="label">flex-end（貼下面）</p>
+    <div class="row" style="align-items: flex-end;">
+    <div class="box">1</div><div class="box tall">2</div><div class="box">3</div>
+    </div>
+
+    <h1><a href="index.html"><em><strong>返回主頁🔙</strong></em></a></h1>
+
+    
+  </body>
+</html>
