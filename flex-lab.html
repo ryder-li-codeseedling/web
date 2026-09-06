@@ -40,9 +40,43 @@
         height: 64px;
         line-height: 64px;
         }
+        .navbar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: #59acff;
+          padding: 12px 20px;
+          border-radius: 12px;
+        }
+        
+        .logo {
+          color: #e1f0ff;
+          font-weight: bold;
+          font-family: monospace;
+        }
+        
+        .nav-links {
+          display: flex;
+          gap: 16px;
+        }
+        
+        .nav-links a {
+          color: #d9e9ff;
+          text-decoration: none;
+          font-family: monospace;
+
     </style>
   </head>
   <body>
+    <nav class="navbar">
+      <span class="logo">就是flex的示範</span>
+      <div class="nav-links">
+      <a href="index.html">首頁</a>
+      <a href="about-me.html">關於我</a>
+      <a href="rocket.html">火箭!</a>
+      
+    </nav>
+
     <p class="label">flex-start（預設）</p>
     <div class="row" style="justify-content: flex-start;">
     <div class="box">1</div><div class="box">2</div><div class="box">3</div>

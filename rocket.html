@@ -1,0 +1,3043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ORBIT-X // 3D ROCKET SIMULATOR</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+
+*{
+    box-sizing:border-box;
+}
+
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#000;
+    color:white;
+    font-family:Orbitron,Arial,sans-serif;
+}
+
+#game{
+    position:fixed;
+    inset:0;
+}
+
+canvas{
+    display:block;
+}
+
+.hud{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+}
+
+.panel{
+    background:rgba(3,9,18,.76);
+    border:1px solid rgba(75,190,255,.25);
+    backdrop-filter:blur(14px);
+    box-shadow:
+        0 15px 50px rgba(0,0,0,.35),
+        inset 0 0 30px rgba(0,150,255,.025);
+    border-radius:10px;
+}
+
+/* TOP */
+
+.top{
+    position:absolute;
+    left:18px;
+    right:18px;
+    top:15px;
+    height:50px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 18px;
+}
+
+.logo{
+    font-size:18px;
+    font-weight:900;
+    letter-spacing:5px;
+}
+
+.logo span{
+    color:#ff3838;
+}
+
+.status{
+    font-size:8px;
+    letter-spacing:2px;
+    color:#55ffa0;
+}
+
+.status i{
+    display:inline-block;
+    width:7px;
+    height:7px;
+    margin-right:7px;
+    border-radius:50%;
+    background:#55ffa0;
+    box-shadow:0 0 14px #55ffa0;
+}
+
+/* TELEMETRY */
+
+.telemetry{
+    position:absolute;
+    left:18px;
+    top:78px;
+    width:245px;
+    padding:16px;
+}
+
+.title{
+    color:#6f8399;
+    font-size:8px;
+    letter-spacing:3px;
+    margin-bottom:16px;
+}
+
+.stat{
+    margin-bottom:14px;
+}
+
+.statHead{
+    display:flex;
+    justify-content:space-between;
+    color:#6f8399;
+    font-size:7px;
+    letter-spacing:1px;
+}
+
+.value{
+    margin-top:4px;
+    font-size:18px;
+    font-weight:800;
+}
+
+.value small{
+    color:#71859a;
+    font-size:7px;
+}
+
+.bar{
+    height:3px;
+    margin-top:6px;
+    border-radius:10px;
+    overflow:hidden;
+    background:#172330;
+}
+
+.bar div{
+    height:100%;
+    width:0;
+    background:linear-gradient(
+        90deg,
+        #22d9ff,
+        #fff
+    );
+    box-shadow:0 0 14px #22d9ff;
+}
+
+/* CONTROLS */
+
+.controls{
+    position:absolute;
+    right:18px;
+    top:78px;
+    width:280px;
+    padding:16px;
+    pointer-events:auto;
+}
+
+.control{
+    margin-bottom:15px;
+}
+
+.control label{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:7px;
+    color:#71859a;
+    font-size:7px;
+    letter-spacing:1px;
+}
+
+input[type=range]{
+    width:100%;
+    accent-color:#ff4037;
+    cursor:pointer;
+}
+
+.buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:6px;
+}
+
+button{
+    padding:10px 5px;
+    border:1px solid #2a3d50;
+    border-radius:6px;
+    background:#101a26;
+    color:#fff;
+    font-family:inherit;
+    font-size:7px;
+    font-weight:800;
+    letter-spacing:1px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1b2c3d;
+}
+
+button.active{
+    background:#123527;
+    border-color:#42ec9a;
+    color:#61ffae;
+    box-shadow:0 0 12px rgba(50,255,150,.12);
+}
+
+button.launch{
+    grid-column:1 / 3;
+    padding:14px;
+    background:linear-gradient(
+        135deg,
+        #ff4138,
+        #8d0d0a
+    );
+    border-color:#ff6860;
+    box-shadow:0 0 25px rgba(255,40,30,.15);
+}
+
+button.danger{
+    color:#ff716a;
+    border-color:#6a302c;
+}
+
+/* CENTER HUD */
+
+.centerHUD{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:175px;
+    height:175px;
+    transform:translate(-50%,-50%);
+    opacity:.35;
+}
+
+.centerHUD:before,
+.centerHUD:after{
+    content:"";
+    position:absolute;
+    inset:0;
+    border:1px solid #55b8e9;
+    border-radius:50%;
+}
+
+.centerHUD:after{
+    inset:46px;
+}
+
+.lineH,
+.lineV{
+    position:absolute;
+    background:#55b8e9;
+}
+
+.lineH{
+    left:0;
+    right:0;
+    top:50%;
+    height:1px;
+}
+
+.lineV{
+    top:0;
+    bottom:0;
+    left:50%;
+    width:1px;
+}
+
+.target{
+    position:absolute;
+    top:calc(50% - 120px);
+    left:50%;
+    transform:translateX(-50%);
+    color:#71899f;
+    font-size:7px;
+    letter-spacing:2px;
+}
+
+.warning{
+    position:absolute;
+    top:78px;
+    left:50%;
+    transform:translateX(-50%);
+    color:#ff4139;
+    font-size:9px;
+    font-weight:900;
+    letter-spacing:3px;
+    opacity:0;
+}
+
+.warning.show{
+    opacity:1;
+    animation:blink .45s infinite alternate;
+}
+
+@keyframes blink{
+    from{opacity:1}
+    to{opacity:.2}
+}
+
+/* BOTTOM */
+
+.bottom{
+    position:absolute;
+    left:50%;
+    bottom:17px;
+    width:min(650px,calc(100% - 40px));
+    transform:translateX(-50%);
+    padding:13px 16px;
+    text-align:center;
+}
+
+.phase{
+    color:#54dcff;
+    font-size:8px;
+    letter-spacing:2px;
+}
+
+.big{
+    margin-top:4px;
+    font-size:22px;
+    font-weight:900;
+}
+
+.mission{
+    display:flex;
+    justify-content:space-between;
+    margin-top:10px;
+    color:#61758b;
+    font-size:7px;
+}
+
+.hint,
+.camera{
+    position:absolute;
+    bottom:19px;
+    color:#53687e;
+    font-size:7px;
+    letter-spacing:1px;
+}
+
+.hint{
+    left:18px;
+}
+
+.camera{
+    right:18px;
+}
+
+@media(max-width:760px){
+
+    .telemetry{
+        left:7px;
+        width:175px;
+    }
+
+    .controls{
+        right:7px;
+        width:175px;
+    }
+
+    .top{
+        left:7px;
+        right:7px;
+    }
+
+    .hint,
+    .camera{
+        display:none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="game"></div>
+
+<div class="hud">
+
+    <div class="panel top">
+
+        <div class="logo">
+            ORBIT<span>//</span>X
+        </div>
+
+        <div class="status">
+            <i></i>
+            FLIGHT COMPUTER ONLINE
+        </div>
+
+    </div>
+
+
+    <!-- TELEMETRY -->
+
+    <div class="panel telemetry">
+
+        <div class="title">
+            LIVE TELEMETRY
+        </div>
+
+        <div class="stat">
+
+            <div class="statHead">
+                <span>ALTITUDE</span>
+                <span id="altPct">0%</span>
+            </div>
+
+            <div class="value">
+                <span id="alt">0</span>
+                <small>KM</small>
+            </div>
+
+            <div class="bar">
+                <div id="altBar"></div>
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="statHead">
+                <span>VELOCITY</span>
+                <span id="mach">M 0.00</span>
+            </div>
+
+            <div class="value">
+                <span id="velocity">0</span>
+                <small>KM/H</small>
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="statHead">
+                <span>FUEL</span>
+                <span id="fuelPct">100%</span>
+            </div>
+
+            <div class="value">
+                <span id="fuel">100</span>
+                <small>%</small>
+            </div>
+
+            <div class="bar">
+                <div id="fuelBar"></div>
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="statHead">
+                <span>PITCH</span>
+                <span>ATTITUDE</span>
+            </div>
+
+            <div class="value">
+                <span id="pitch">0</span>
+                <small>°</small>
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="statHead">
+                <span>G-FORCE</span>
+                <span>LOAD</span>
+            </div>
+
+            <div class="value">
+                <span id="gforce">1.00</span>
+                <small>G</small>
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="statHead">
+                <span>ENGINE</span>
+                <span id="engine">STANDBY</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CONTROLS -->
+
+    <div class="panel controls">
+
+        <div class="title">
+            FLIGHT CONTROL
+        </div>
+
+
+        <div class="control">
+
+            <label>
+                <span>THROTTLE</span>
+                <span id="throttleText">0%</span>
+            </label>
+
+            <input
+                id="throttle"
+                type="range"
+                min="0"
+                max="100"
+                value="0"
+            >
+
+        </div>
+
+
+        <div class="control">
+
+            <label>
+                <span>PITCH</span>
+                <span id="pitchText">0°</span>
+            </label>
+
+            <input
+                id="pitchControl"
+                type="range"
+                min="-45"
+                max="45"
+                value="0"
+            >
+
+        </div>
+
+
+        <div class="buttons">
+
+            <button id="engineBtn" class="active">
+                ENGINE
+            </button>
+
+            <button id="rcsBtn">
+                RCS
+            </button>
+
+            <button id="autoBtn">
+                AUTOPILOT
+            </button>
+
+            <button id="orbitBtn">
+                ORBIT
+            </button>
+
+            <button id="cameraBtn">
+                CAMERA
+            </button>
+
+            <button id="trajBtn">
+                TRAJECTORY
+            </button>
+
+            <button id="stageBtn">
+                STAGE
+            </button>
+
+            <button id="pauseBtn">
+                PAUSE
+            </button>
+
+            <button id="resetBtn" class="danger">
+                RESET
+            </button>
+
+            <button id="launchBtn" class="launch">
+                🚀 INITIATE LAUNCH
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- CENTER AIM -->
+
+    <div class="centerHUD">
+
+        <div class="lineH"></div>
+        <div class="lineV"></div>
+
+    </div>
+
+
+    <div class="target">
+        FLIGHT VECTOR ·
+        <span id="heading">000</span>°
+    </div>
+
+
+    <div
+        class="warning"
+        id="warning"
+    >
+        ⚠ CRITICAL FLIGHT CONDITION
+    </div>
+
+
+    <!-- BOTTOM -->
+
+    <div class="panel bottom">
+
+        <div
+            class="phase"
+            id="phase"
+        >
+            PRE-LAUNCH
+        </div>
+
+        <div
+            class="big"
+            id="countdown"
+        >
+            READY
+        </div>
+
+        <div class="mission">
+
+            <span>
+                MISSION OX-03
+            </span>
+
+            <span>
+                STAGE <b id="stage">1</b>
+            </span>
+
+            <span>
+                3D FLIGHT SIM
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="hint">
+        W/S THROTTLE · A/D PITCH · SPACE ENGINE · X STAGE · P PAUSE · C CAMERA
+    </div>
+
+    <div class="camera">
+        3D FLIGHT COMPUTER
+    </div>
+
+</div>
+
+
+<script type="importmap">
+{
+    "imports":{
+        "three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"
+    }
+}
+</script>
+
+
+<script type="module">
+
+import * as THREE from "three";
+
+
+/* =========================================================
+   SCENE
+========================================================= */
+
+const scene =
+    new THREE.Scene();
+
+scene.background =
+    new THREE.Color(0x01040b);
+
+scene.fog =
+    new THREE.FogExp2(
+        0x020713,
+        .0012
+    );
+
+
+const camera =
+    new THREE.PerspectiveCamera(
+        55,
+        innerWidth/innerHeight,
+        .1,
+        100000
+    );
+
+camera.position.set(
+    9,
+    5,
+    22
+);
+
+
+const renderer =
+    new THREE.WebGLRenderer({
+        antialias:true,
+        powerPreference:"high-performance"
+    });
+
+renderer.setPixelRatio(
+    Math.min(
+        devicePixelRatio,
+        2
+    )
+);
+
+renderer.setSize(
+    innerWidth,
+    innerHeight
+);
+
+renderer.outputColorSpace =
+    THREE.SRGBColorSpace;
+
+renderer.shadowMap.enabled=true;
+
+document
+    .getElementById("game")
+    .appendChild(renderer.domElement);
+
+
+/* =========================================================
+   LIGHTING
+========================================================= */
+
+scene.add(
+    new THREE.HemisphereLight(
+        0x9bdcff,
+        0x03070c,
+        1.8
+    )
+);
+
+const sun =
+    new THREE.DirectionalLight(
+        0xffffff,
+        3
+    );
+
+sun.position.set(
+    30,
+    50,
+    20
+);
+
+sun.castShadow=true;
+
+scene.add(sun);
+
+
+/* =========================================================
+   STARS
+========================================================= */
+
+const starGeometry =
+    new THREE.BufferGeometry();
+
+const starCount=10000;
+
+const starPositions =
+    new Float32Array(
+        starCount*3
+    );
+
+for(
+    let i=0;
+    i<starCount;
+    i++
+){
+
+    const r=
+        600+
+        Math.random()*3000;
+
+    const theta=
+        Math.random()*
+        Math.PI*2;
+
+    const phi=
+        Math.acos(
+            2*Math.random()-1
+        );
+
+    starPositions[i*3]=
+        r*
+        Math.sin(phi)*
+        Math.cos(theta);
+
+    starPositions[i*3+1]=
+        r*
+        Math.cos(phi);
+
+    starPositions[i*3+2]=
+        r*
+        Math.sin(phi)*
+        Math.sin(theta);
+}
+
+starGeometry.setAttribute(
+    "position",
+    new THREE.BufferAttribute(
+        starPositions,
+        3
+    )
+);
+
+const starMaterial =
+    new THREE.PointsMaterial({
+        color:0xc8eaff,
+        size:.85,
+        transparent:true,
+        opacity:.9,
+        sizeAttenuation:true
+    });
+
+const stars =
+    new THREE.Points(
+        starGeometry,
+        starMaterial
+    );
+
+scene.add(stars);
+
+
+/* =========================================================
+   EARTH
+========================================================= */
+
+const earthGroup =
+    new THREE.Group();
+
+scene.add(earthGroup);
+
+const earthRadius=95;
+
+const earthMaterial =
+    new THREE.MeshPhongMaterial({
+        color:0x14527c,
+        shininess:10
+    });
+
+const earth =
+    new THREE.Mesh(
+        new THREE.SphereGeometry(
+            earthRadius,
+            96,
+            64
+        ),
+        earthMaterial
+    );
+
+earth.receiveShadow=true;
+
+earthGroup.add(earth);
+
+
+/* Procedural land masses */
+
+for(
+    let i=0;
+    i<130;
+    i++
+){
+
+    const lat=
+        THREE.MathUtils.degToRad(
+            -65+
+            Math.random()*130
+        );
+
+    const lon=
+        Math.random()*
+        Math.PI*2;
+
+    const r=
+        earthRadius+.08;
+
+    const x=
+        r*
+        Math.cos(lat)*
+        Math.cos(lon);
+
+    const y=
+        r*
+        Math.sin(lat);
+
+    const z=
+        r*
+        Math.cos(lat)*
+        Math.sin(lon);
+
+    const land=
+        new THREE.Mesh(
+            new THREE.SphereGeometry(
+                .5+
+                Math.random()*2.8,
+                8,
+                6
+            ),
+            new THREE.MeshBasicMaterial({
+                color:
+                    Math.random()>.4
+                    ?0x23643b
+                    :0x17412e
+            })
+        );
+
+    land.position.set(
+        x,y,z
+    );
+
+    land.lookAt(0,0,0);
+
+    earthGroup.add(land);
+}
+
+
+/* Atmosphere */
+
+const atmosphere =
+    new THREE.Mesh(
+        new THREE.SphereGeometry(
+            earthRadius+2.5,
+            64,
+            48
+        ),
+        new THREE.MeshBasicMaterial({
+            color:0x159eff,
+            transparent:true,
+            opacity:.13,
+            side:THREE.BackSide
+        })
+    );
+
+earthGroup.add(atmosphere);
+
+
+/* =========================================================
+   FUTURISTIC ROCKET
+========================================================= */
+
+const rocket =
+    new THREE.Group();
+
+scene.add(rocket);
+
+
+/* =========================================================
+   MATERIALS
+========================================================= */
+
+const titanium =
+    new THREE.MeshPhysicalMaterial({
+        color:0xdde6eb,
+        metalness:.9,
+        roughness:.2,
+        clearcoat:.8
+    });
+
+const darkMetal =
+    new THREE.MeshPhysicalMaterial({
+        color:0x101821,
+        metalness:.95,
+        roughness:.22
+    });
+
+const blackMetal =
+    new THREE.MeshPhysicalMaterial({
+        color:0x03070a,
+        metalness:1,
+        roughness:.15
+    });
+
+const redMetal =
+    new THREE.MeshPhysicalMaterial({
+        color:0xf02931,
+        metalness:.65,
+        roughness:.2,
+        emissive:0x250000,
+        emissiveIntensity:.35
+    });
+
+const cyanGlow =
+    new THREE.MeshBasicMaterial({
+        color:0x20e6ff,
+        transparent:true,
+        opacity:.9,
+        blending:THREE.AdditiveBlending,
+        depthWrite:false
+    });
+
+const glass =
+    new THREE.MeshPhysicalMaterial({
+        color:0x04151e,
+        metalness:.7,
+        roughness:.03,
+        transmission:.2,
+        transparent:true,
+        opacity:.95,
+        emissive:0x007c9e,
+        emissiveIntensity:.8
+    });
+
+
+/* =========================================================
+   ROCKET BODY
+========================================================= */
+
+const body =
+    new THREE.Mesh(
+        new THREE.CylinderGeometry(
+            1.35,
+            1.5,
+            8.8,
+            48
+        ),
+        titanium
+    );
+
+body.castShadow=true;
+
+rocket.add(body);
+
+
+/* lower section */
+
+const lowerSection =
+    new THREE.Mesh(
+        new THREE.CylinderGeometry(
+            1.48,
+            1.58,
+            1.7,
+            48
+        ),
+        darkMetal
+    );
+
+lowerSection.position.y=-3.8;
+
+rocket.add(lowerSection);
+
+
+/* shoulder */
+
+const shoulder =
+    new THREE.Mesh(
+        new THREE.CylinderGeometry(
+            1.35,
+            1.68,
+            .65,
+            48
+        ),
+        darkMetal
+    );
+
+shoulder.position.y=3.8;
+
+rocket.add(shoulder);
+
+
+/* =========================================================
+   NOSE
+========================================================= */
+
+const noseBase =
+    new THREE.Mesh(
+        new THREE.CylinderGeometry(
+            1.34,
+            1.34,
+            .65,
+            48
+        ),
+        titanium
+    );
+
+noseBase.position.y=4.45;
+
+rocket.add(noseBase);
+
+
+const nose =
+    new THREE.Mesh(
+        new THREE.ConeGeometry(
+            1.34,
+            3.6,
+            48
+        ),
+        titanium
+    );
+
+nose.position.y=6.5;
+
+nose.castShadow=true;
+
+rocket.add(nose);
+
+
+/* nose tip */
+
+const noseTip =
+    new THREE.Mesh(
+        new THREE.SphereGeometry(
+            .27,
+            24,
+            16
+        ),
+        blackMetal
+    );
+
+noseTip.position.y=8.25;
+
+rocket.add(noseTip);
+
+
+/* =========================================================
+   BODY RINGS
+========================================================= */
+
+function bodyRing(
+    y,
+    radius,
+    colorMaterial
+){
+
+    const ring=
+        new THREE.Mesh(
+            new THREE.TorusGeometry(
+                radius,
+                .035,
+                10,
+                64
+            ),
+            colorMaterial
+        );
+
+    ring.rotation.x=
+        Math.PI/2;
+
+    ring.position.y=y;
+
+    rocket.add(ring);
+}
+
+bodyRing(
+    3.25,
+    1.39,
+    cyanGlow
+);
+
+bodyRing(
+    2.65,
+    1.39,
+    darkMetal
+);
+
+bodyRing(
+    -1.1,
+    1.42,
+    cyanGlow
+);
+
+bodyRing(
+    -2.7,
+    1.46,
+    darkMetal
+);
+
+
+/* =========================================================
+   COCKPIT
+========================================================= */
+
+const cockpit =
+    new THREE.Mesh(
+        new THREE.SphereGeometry(
+            .72,
+            32,
+            20
+        ),
+        glass
+    );
+
+cockpit.position.set(
+    0,
+    2.65,
+    1.22
+);
+
+cockpit.scale.set(
+    1.2,
+    .95,
+    .3
+);
+
+rocket.add(cockpit);
+
+
+/* cockpit glow */
+
+const cockpitRing =
+    new THREE.Mesh(
+        new THREE.TorusGeometry(
+            .72,
+            .035,
+            10,
+            48
+        ),
+        cyanGlow
+    );
+
+cockpitRing.rotation.x=
+    Math.PI/2;
+
+cockpitRing.position.set(
+    0,
+    2.65,
+    1.32
+);
+
+cockpitRing.scale.set(
+    1.15,
+    1,
+    .45
+);
+
+rocket.add(cockpitRing);
+
+
+/* =========================================================
+   RED ACCENT STRIPE
+========================================================= */
+
+const redStripe =
+    new THREE.Mesh(
+        new THREE.CylinderGeometry(
+            1.405,
+            1.405,
+            .3,
+            48
+        ),
+        redMetal
+    );
+
+redStripe.position.y=1.45;
+
+rocket.add(redStripe);
+
+
+/* =========================================================
+   CENTER SPINE
+========================================================= */
+
+const spine =
+    new THREE.Mesh(
+        new THREE.BoxGeometry(
+            .075,
+            3.8,
+            .04
+        ),
+        redMetal
+    );
+
+spine.position.set(
+    0,
+    .15,
+    1.39
+);
+
+rocket.add(spine);
+
+
+/* =========================================================
+   AERODYNAMIC FINS
+========================================================= */
+
+function createFin(side){
+
+    const shape=
+        new THREE.Shape();
+
+    shape.moveTo(
+        0,
+        -2.4
+    );
+
+    shape.lineTo(
+        side*2.65,
+        -1.25
+    );
+
+    shape.lineTo(
+        side*2.4,
+        .5
+    );
+
+    shape.lineTo(
+        side*1.35,
+        .9
+    );
+
+    shape.lineTo(
+        0,
+        1.35
+    );
+
+    shape.closePath();
+
+
+    const geometry=
+        new THREE.ExtrudeGeometry(
+            shape,
+            {
+                depth:.2,
+                bevelEnabled:true,
+                bevelSegments:3,
+                bevelSize:.06,
+                bevelThickness:.05
+            }
+        );
+
+
+    const fin=
+        new THREE.Mesh(
+            geometry,
+            darkMetal
+        );
+
+    fin.position.y=-2.25;
+
+    fin.rotation.x=
+        Math.PI/2;
+
+    if(side<0)
+        fin.rotation.y=Math.PI;
+
+    fin.castShadow=true;
+
+    rocket.add(fin);
+
+
+    /* glowing fin edge */
+
+    const edge=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                .05,
+                2.6,
+                .05
+            ),
+            cyanGlow
+        );
+
+    edge.position.set(
+        side*1.8,
+        -2.0,
+        .16
+    );
+
+    edge.rotation.z=
+        side>0
+        ?-.3
+        :.3;
+
+    rocket.add(edge);
+}
+
+createFin(1);
+createFin(-1);
+
+
+/* =========================================================
+   RCS PODS
+========================================================= */
+
+function createRCSPod(side){
+
+    const pod=
+        new THREE.Mesh(
+            new THREE.CylinderGeometry(
+                .19,
+                .19,
+                1.1,
+                20
+            ),
+            darkMetal
+        );
+
+    pod.position.set(
+        side*1.48,
+        1.9,
+        0
+    );
+
+    pod.rotation.z=
+        Math.PI/2;
+
+    rocket.add(pod);
+
+
+    const nozzle=
+        new THREE.Mesh(
+            new THREE.CylinderGeometry(
+                .07,
+                .12,
+                .25,
+                16
+            ),
+            blackMetal
+        );
+
+    nozzle.position.set(
+        side*2.02,
+        1.9,
+        0
+    );
+
+    nozzle.rotation.z=
+        Math.PI/2;
+
+    rocket.add(nozzle);
+}
+
+createRCSPod(1);
+createRCSPod(-1);
+
+
+/* =========================================================
+   ENGINE CLUSTER
+========================================================= */
+
+const engineCluster =
+    new THREE.Group();
+
+engineCluster.position.y=-4.72;
+
+rocket.add(engineCluster);
+
+
+const enginePositions=[
+    [0,0],
+    [.58,0],
+    [-.58,0],
+    [0,.58],
+    [0,-.58],
+    [.42,.42],
+    [-.42,-.42]
+];
+
+
+const flames=[];
+
+for(
+    let i=0;
+    i<enginePositions.length;
+    i++
+){
+
+    const x=
+        enginePositions[i][0];
+
+    const z=
+        enginePositions[i][1];
+
+
+    /* nozzle */
+
+    const nozzle=
+        new THREE.Mesh(
+            new THREE.CylinderGeometry(
+                .22,
+                .35,
+                .65,
+                24
+            ),
+            blackMetal
+        );
+
+    nozzle.position.set(
+        x,
+        0,
+        z
+    );
+
+    engineCluster.add(nozzle);
+
+
+    /* inner nozzle */
+
+    const inner=
+        new THREE.Mesh(
+            new THREE.CylinderGeometry(
+                .11,
+                .18,
+                .67,
+                20
+            ),
+            new THREE.MeshBasicMaterial({
+                color:0x11151a
+            })
+        );
+
+    inner.position.set(
+        x,
+        -.02,
+        z
+    );
+
+    engineCluster.add(inner);
+
+
+    /* flame */
+
+    const flame=
+        new THREE.Mesh(
+            new THREE.ConeGeometry(
+                .18,
+                4,
+                20,
+                1,
+                true
+            ),
+            new THREE.MeshBasicMaterial({
+                color:0xff4b00,
+                transparent:true,
+                opacity:.82,
+                blending:THREE.AdditiveBlending,
+                depthWrite:false
+            })
+        );
+
+    flame.position.set(
+        x,
+        -2.1,
+        z
+    );
+
+    flame.rotation.x=
+        Math.PI;
+
+    engineCluster.add(flame);
+
+    flames.push(flame);
+
+
+    /* white hot core */
+
+    const core=
+        new THREE.Mesh(
+            new THREE.ConeGeometry(
+                .08,
+                2.3,
+                16,
+                1,
+                true
+            ),
+            new THREE.MeshBasicMaterial({
+                color:0xffffcf,
+                transparent:true,
+                opacity:.95,
+                blending:THREE.AdditiveBlending,
+                depthWrite:false
+            })
+        );
+
+    core.position.set(
+        x,
+        -1.25,
+        z
+    );
+
+    core.rotation.x=
+        Math.PI;
+
+    engineCluster.add(core);
+}
+
+
+/* engine light */
+
+const engineLight=
+    new THREE.PointLight(
+        0xff5a12,
+        0,
+        35
+    );
+
+engineLight.position.y=-7;
+
+rocket.add(engineLight);
+
+
+/* =========================================================
+   NAVIGATION LIGHTS
+========================================================= */
+
+function navLight(
+    x,
+    y,
+    z,
+    color
+){
+
+    const bulb=
+        new THREE.Mesh(
+            new THREE.SphereGeometry(
+                .065,
+                12,
+                12
+            ),
+            new THREE.MeshBasicMaterial({
+                color:color
+            })
+        );
+
+    bulb.position.set(
+        x,y,z
+    );
+
+    rocket.add(bulb);
+
+
+    const light=
+        new THREE.PointLight(
+            color,
+            1.4,
+            4
+        );
+
+    light.position.copy(
+        bulb.position
+    );
+
+    rocket.add(light);
+}
+
+navLight(
+    -1.43,
+    2.1,
+    0,
+    0xff2020
+);
+
+navLight(
+    1.43,
+    2.1,
+    0,
+    0x22ff9b
+);
+
+navLight(
+    0,
+    7.8,
+    .05,
+    0x22e6ff
+);
+
+
+/* =========================================================
+   BODY PANELS
+========================================================= */
+
+for(
+    let i=0;
+    i<8;
+    i++
+){
+
+    const angle=
+        i*
+        Math.PI/4;
+
+    const panel=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                .55,
+                .7,
+                .025
+            ),
+            darkMetal
+        );
+
+    panel.position.set(
+        Math.sin(angle)*1.39,
+        -.7+
+        i*.15,
+        Math.cos(angle)*1.39
+    );
+
+    panel.lookAt(
+        0,
+        panel.position.y,
+        0
+    );
+
+    rocket.add(panel);
+}
+
+
+/* =========================================================
+   LAUNCH PAD
+========================================================= */
+
+const launchpad=
+    new THREE.Group();
+
+scene.add(launchpad);
+
+
+const pad=
+    new THREE.Mesh(
+        new THREE.CylinderGeometry(
+            13,
+            13,
+            .5,
+            64
+        ),
+        new THREE.MeshStandardMaterial({
+            color:0x25313c,
+            metalness:.8,
+            roughness:.4
+        })
+    );
+
+pad.position.y=-8;
+
+pad.receiveShadow=true;
+
+launchpad.add(pad);
+
+
+/* glowing rings */
+
+for(
+    let i=0;
+    i<5;
+    i++
+){
+
+    const ring=
+        new THREE.Mesh(
+            new THREE.TorusGeometry(
+                3+
+                i*2.1,
+                .055,
+                8,
+                64
+            ),
+            new THREE.MeshBasicMaterial({
+                color:0x1ccfff,
+                transparent:true,
+                opacity:.32
+            })
+        );
+
+    ring.rotation.x=
+        Math.PI/2;
+
+    ring.position.y=-7.72;
+
+    launchpad.add(ring);
+}
+
+
+/* =========================================================
+   LAUNCH TOWER
+========================================================= */
+
+const tower=
+    new THREE.Group();
+
+for(
+    let y=0;
+    y<14;
+    y+=1.25
+){
+
+    const beam=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                .15,
+                1.2,
+                .15
+            ),
+            darkMetal
+        );
+
+    beam.position.set(
+        3.5,
+        y-7,
+        0
+    );
+
+    tower.add(beam);
+}
+
+
+for(
+    let y=0;
+    y<13;
+    y+=1.25
+){
+
+    const cross=
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                3.5,
+                .09,
+                .09
+            ),
+            darkMetal
+        );
+
+    cross.position.set(
+        1.75,
+        y-7,
+        0
+    );
+
+    tower.add(cross);
+}
+
+launchpad.add(tower);
+
+
+/* =========================================================
+   TRAJECTORY
+========================================================= */
+
+const trajectoryPoints=[];
+
+for(
+    let i=0;
+    i<100;
+    i++
+){
+
+    trajectoryPoints.push(
+        new THREE.Vector3(
+            0,
+            i*.5,
+            0
+        )
+    );
+}
+
+const trajectory=
+    new THREE.Line(
+        new THREE.BufferGeometry()
+            .setFromPoints(
+                trajectoryPoints
+            ),
+        new THREE.LineDashedMaterial({
+            color:0x38dcff,
+            dashSize:.45,
+            gapSize:.3,
+            transparent:true,
+            opacity:.5
+        })
+    );
+
+trajectory.computeLineDistances();
+
+trajectory.visible=false;
+
+scene.add(trajectory);
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+const state={
+
+    altitude:0,
+    velocity:0,
+    fuel:100,
+    pitch:0,
+
+    throttle:0,
+
+    engine:true,
+    rcs:false,
+    autopilot:false,
+    orbit:false,
+
+    launched:false,
+    paused:false,
+
+    stage:1,
+
+    cameraMode:0,
+
+    trajectory:false
+};
+
+
+let launchTimer=null;
+
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+const throttleInput=
+    document.getElementById(
+        "throttle"
+    );
+
+const pitchInput=
+    document.getElementById(
+        "pitchControl"
+    );
+
+
+throttleInput.addEventListener(
+    "input",
+    ()=>{
+        state.throttle=
+            Number(
+                throttleInput.value
+            );
+    }
+);
+
+
+pitchInput.addEventListener(
+    "input",
+    ()=>{
+        state.pitch=
+            Number(
+                pitchInput.value
+            );
+    }
+);
+
+
+const keys={};
+
+addEventListener(
+    "keydown",
+    e=>{
+
+        keys[
+            e.key.toLowerCase()
+        ]=true;
+
+        if(e.code==="Space"){
+
+            e.preventDefault();
+
+            state.engine=
+                !state.engine;
+        }
+
+        if(
+            e.key.toLowerCase()==="x"
+        )
+            stage();
+
+        if(
+            e.key.toLowerCase()==="p"
+        )
+            state.paused=
+                !state.paused;
+
+        if(
+            e.key.toLowerCase()==="c"
+        )
+            cameraMode();
+
+        if(
+            e.key.toLowerCase()==="o"
+        )
+            state.orbit=
+                !state.orbit;
+    }
+);
+
+
+addEventListener(
+    "keyup",
+    e=>{
+        keys[
+            e.key.toLowerCase()
+        ]=false;
+    }
+);
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+function toggle(
+    id,
+    property
+){
+
+    const button=
+        document.getElementById(id);
+
+    button.onclick=()=>{
+
+        state[property]=
+            !state[property];
+
+        button.classList.toggle(
+            "active",
+            state[property]
+        );
+    };
+}
+
+toggle(
+    "engineBtn",
+    "engine"
+);
+
+toggle(
+    "rcsBtn",
+    "rcs"
+);
+
+toggle(
+    "autoBtn",
+    "autopilot"
+);
+
+toggle(
+    "orbitBtn",
+    "orbit"
+);
+
+toggle(
+    "trajBtn",
+    "trajectory"
+);
+
+
+document.getElementById(
+    "pauseBtn"
+).onclick=()=>{
+    state.paused=
+        !state.paused;
+};
+
+
+document.getElementById(
+    "cameraBtn"
+).onclick=
+    cameraMode;
+
+
+document.getElementById(
+    "stageBtn"
+).onclick=
+    stage;
+
+
+document.getElementById(
+    "resetBtn"
+).onclick=
+    reset;
+
+
+document.getElementById(
+    "launchBtn"
+).onclick=
+    launch;
+
+
+/* =========================================================
+   LAUNCH SEQUENCE
+========================================================= */
+
+function launch(){
+
+    if(state.launched)
+        return;
+
+    let count=3;
+
+    document.getElementById(
+        "countdown"
+    ).textContent=count;
+
+
+    launchTimer=
+        setInterval(()=>{
+
+            count--;
+
+            if(count>0){
+
+                document.getElementById(
+                    "countdown"
+                ).textContent=count;
+
+            }else{
+
+                clearInterval(
+                    launchTimer
+                );
+
+                state.launched=true;
+                state.engine=true;
+
+                state.throttle=
+                    Math.max(
+                        85,
+                        state.throttle
+                    );
+
+                throttleInput.value=
+                    state.throttle;
+
+                document.getElementById(
+                    "phase"
+                ).textContent=
+                    "LIFTOFF";
+
+            }
+
+        },1000);
+}
+
+
+/* =========================================================
+   STAGING
+========================================================= */
+
+function stage(){
+
+    if(
+        !state.launched ||
+        state.stage>=2
+    )
+        return;
+
+    state.stage=2;
+
+    state.fuel=
+        Math.min(
+            100,
+            state.fuel+20
+        );
+
+    document.getElementById(
+        "stage"
+    ).textContent="2";
+
+    document.getElementById(
+        "phase"
+    ).textContent=
+        "SECOND STAGE";
+
+    state.throttle=
+        Math.max(
+            state.throttle,
+            70
+        );
+}
+
+
+/* =========================================================
+   PHYSICS
+========================================================= */
+
+function physics(dt){
+
+    if(
+        !state.launched ||
+        state.paused
+    )
+        return;
+
+
+    /* keyboard throttle */
+
+    if(keys["w"]){
+
+        state.throttle=
+            Math.min(
+                100,
+                state.throttle+
+                45*dt
+            );
+    }
+
+    if(keys["s"]){
+
+        state.throttle=
+            Math.max(
+                0,
+                state.throttle-
+                45*dt
+            );
+    }
+
+
+    /* keyboard pitch */
+
+    if(
+        keys["a"] ||
+        keys["arrowleft"]
+    ){
+
+        state.pitch=
+            Math.max(
+                -45,
+                state.pitch-
+                35*dt
+            );
+    }
+
+
+    if(
+        keys["d"] ||
+        keys["arrowright"]
+    ){
+
+        state.pitch=
+            Math.min(
+                45,
+                state.pitch+
+                35*dt
+            );
+    }
+
+
+    /* autopilot */
+
+    if(state.autopilot){
+
+        let target=0;
+
+        if(state.altitude>8)
+            target=8;
+
+        if(state.altitude>25)
+            target=18;
+
+        if(state.altitude>55)
+            target=30;
+
+        if(state.altitude>100)
+            target=42;
+
+        state.pitch +=
+            (
+                target-
+                state.pitch
+            )*
+            dt*.7;
+    }
+
+
+    /* engine power */
+
+    const power=
+        state.engine &&
+        state.fuel>0
+        ?state.throttle/100
+        :0;
+
+
+    const efficiency=
+        state.stage===2
+        ?1.25
+        :1;
+
+
+    let acceleration=
+        power*
+        .75*
+        efficiency;
+
+
+    state.velocity +=
+        acceleration*
+        60*
+        dt;
+
+
+    /* gravity */
+
+    state.velocity -=
+        (
+            .013/
+            (
+                1+
+                state.altitude/
+                130
+            )
+        )*
+        60*
+        dt;
+
+
+    /* orbital assist */
+
+    if(
+        state.orbit &&
+        state.altitude>90
+    ){
+
+        state.velocity +=
+            .08*
+            60*
+            dt;
+    }
+
+
+    /* vertical motion */
+
+    const vertical=
+        Math.cos(
+            THREE.MathUtils.degToRad(
+                state.pitch
+            )
+        );
+
+
+    state.altitude +=
+        state.velocity*
+        vertical*
+        dt*
+        .025;
+
+
+    if(state.altitude<0){
+
+        state.altitude=0;
+        state.velocity=0;
+    }
+
+
+    /* fuel */
+
+    if(power){
+
+        state.fuel -=
+            power*
+            (
+                state.stage===1
+                ?.65
+                :.32
+            )*
+            dt;
+    }
+
+
+    if(state.fuel<=0){
+
+        state.fuel=0;
+        state.engine=false;
+    }
+
+
+    /* rocket attitude */
+
+    rocket.rotation.z=
+        THREE.MathUtils.degToRad(
+            state.pitch
+        );
+
+
+    /* world rotation */
+
+    earthGroup.rotation.y +=
+        .00015*
+        state.velocity*
+        60*
+        dt;
+
+    stars.rotation.y +=
+        .000006*
+        state.velocity*
+        60*
+        dt;
+
+
+    /* engine animation */
+
+    updateRocketEngines(
+        power
+    );
+
+
+    /* launchpad disappears with altitude */
+
+    launchpad.visible=
+        state.altitude<8;
+}
+
+
+/* =========================================================
+   ENGINE ANIMATION
+========================================================= */
+
+function updateRocketEngines(
+    power
+){
+
+    power=
+        THREE.MathUtils.clamp(
+            power,
+            0,
+            1
+        );
+
+
+    for(
+        let i=0;
+        i<flames.length;
+        i++
+    ){
+
+        const flame=
+            flames[i];
+
+        const pulse=
+            1+
+            Math.sin(
+                performance.now()*.025+
+                i
+            )*.08;
+
+
+        flame.visible=
+            power>.01;
+
+        flame.scale.set(
+            .8+
+            power*.5,
+            (
+                .2+
+                power*1.8
+            )*
+            pulse,
+            .8+
+            power*.5
+        );
+    }
+
+
+    engineLight.intensity=
+        power*25;
+}
+
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
+function cameraMode(){
+
+    state.cameraMode=
+        (
+            state.cameraMode+1
+        )%3;
+}
+
+
+function updateCamera(){
+
+    if(
+        state.cameraMode===0
+    ){
+
+        /* cinematic */
+
+        const desired=
+            new THREE.Vector3(
+                9,
+                5,
+                22
+            );
+
+        desired.applyAxisAngle(
+            new THREE.Vector3(
+                0,
+                0,
+                1
+            ),
+            THREE.MathUtils.degToRad(
+                state.pitch
+            )
+        );
+
+        camera.position.lerp(
+            desired,
+            .045
+        );
+
+        camera.lookAt(
+            0,
+            0,
+            0
+        );
+
+    }else if(
+        state.cameraMode===1
+    ){
+
+        /* close chase */
+
+        camera.position.lerp(
+            new THREE.Vector3(
+                5,
+                2,
+                11
+            ),
+            .07
+        );
+
+        camera.lookAt(
+            0,
+            1,
+            0
+        );
+
+    }else{
+
+        /* cockpit */
+
+        camera.position.lerp(
+            new THREE.Vector3(
+                0,
+                2.4,
+                2.8
+            ),
+            .08
+        );
+
+        camera.lookAt(
+            0,
+            8,
+            -20
+        );
+    }
+}
+
+
+/* =========================================================
+   TRAJECTORY
+========================================================= */
+
+function updateTrajectory(){
+
+    trajectory.visible=
+        state.trajectory &&
+        state.launched;
+
+    if(
+        !trajectory.visible
+    )
+        return;
+
+
+    const position=
+        trajectory.geometry
+            .attributes
+            .position;
+
+
+    for(
+        let i=0;
+        i<100;
+        i++
+    ){
+
+        const t=
+            i/99;
+
+        const x=
+            Math.sin(
+                t*
+                state.pitch*
+                .04
+            )*
+            t*
+            20;
+
+        const y=
+            t*
+            (
+                15+
+                state.velocity*
+                .1
+            );
+
+
+        position.setXYZ(
+            i,
+            x,
+            y,
+            0
+        );
+    }
+
+    position.needsUpdate=true;
+}
+
+
+/* =========================================================
+   PHASE
+========================================================= */
+
+function updatePhase(){
+
+    let phase=
+        "ASCENT";
+
+    if(
+        state.altitude<5
+    )
+        phase="LIFTOFF";
+
+    else if(
+        state.altitude<20
+    )
+        phase="LOW ATMOSPHERE";
+
+    else if(
+        state.altitude<60
+    )
+        phase="GRAVITY TURN";
+
+    else if(
+        state.altitude<100
+    )
+        phase="UPPER ATMOSPHERE";
+
+    else if(
+        state.orbit
+    )
+        phase="ORBIT INSERTION";
+
+    else
+        phase="SUB-ORBITAL";
+
+
+    document.getElementById(
+        "phase"
+    ).textContent=phase;
+}
+
+
+/* =========================================================
+   UI
+========================================================= */
+
+function updateUI(){
+
+    const speed=
+        Math.max(
+            0,
+            state.velocity*100
+        );
+
+
+    const altitudePercent=
+        Math.min(
+            100,
+            state.altitude/2
+        );
+
+
+    document.getElementById(
+        "alt"
+    ).textContent=
+        state.altitude.toFixed(1);
+
+
+    document.getElementById(
+        "altPct"
+    ).textContent=
+        altitudePercent.toFixed(0)+"%";
+
+
+    document.getElementById(
+        "altBar"
+    ).style.width=
+        altitudePercent+"%";
+
+
+    document.getElementById(
+        "velocity"
+    ).textContent=
+        Math.round(speed);
+
+
+    document.getElementById(
+        "mach"
+    ).textContent=
+        "M "+
+        (
+            speed/1234
+        ).toFixed(2);
+
+
+    document.getElementById(
+        "fuel"
+    ).textContent=
+        state.fuel.toFixed(0);
+
+
+    document.getElementById(
+        "fuelPct"
+    ).textContent=
+        state.fuel.toFixed(0)+"%";
+
+
+    document.getElementById(
+        "fuelBar"
+    ).style.width=
+        state.fuel+"%";
+
+
+    document.getElementById(
+        "pitch"
+    ).textContent=
+        state.pitch.toFixed(0);
+
+
+    document.getElementById(
+        "pitchText"
+    ).textContent=
+        state.pitch.toFixed(0)+"°";
+
+
+    document.getElementById(
+        "throttleText"
+    ).textContent=
+        state.throttle.toFixed(0)+"%";
+
+
+    document.getElementById(
+        "heading"
+    ).textContent=
+        String(
+            Math.round(
+                (
+                    state.pitch+
+                    360
+                )%360
+            )
+        ).padStart(
+            3,
+            "0"
+        );
+
+
+    const g=
+        1+
+        state.throttle/
+        100*
+        (
+            state.stage===1
+            ?4.7
+            :3.4
+        );
+
+
+    document.getElementById(
+        "gforce"
+    ).textContent=
+        g.toFixed(2);
+
+
+    document.getElementById(
+        "engine"
+    ).textContent=
+        state.engine
+        ?"ACTIVE"
+        :"OFF";
+
+
+    let warning="";
+
+
+    if(state.fuel<15)
+        warning="⚠ LOW FUEL";
+
+
+    if(
+        Math.abs(state.pitch)>38
+    )
+        warning="⚠ EXTREME PITCH";
+
+
+    if(
+        state.altitude>100 &&
+        state.velocity<25
+    )
+        warning=
+            "⚠ ORBITAL VELOCITY LOW";
+
+
+    const warningElement=
+        document.getElementById(
+            "warning"
+        );
+
+
+    warningElement.textContent=
+        warning;
+
+
+    warningElement.classList.toggle(
+        "show",
+        warning!==""
+    );
+
+
+    updatePhase();
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function reset(){
+
+    if(launchTimer)
+        clearInterval(
+            launchTimer
+        );
+
+
+    state.altitude=0;
+    state.velocity=0;
+    state.fuel=100;
+    state.pitch=0;
+    state.throttle=0;
+
+    state.engine=true;
+    state.rcs=false;
+    state.autopilot=false;
+    state.orbit=false;
+
+    state.launched=false;
+    state.paused=false;
+
+    state.stage=1;
+
+    state.cameraMode=0;
+
+
+    rocket.position.set(
+        0,
+        0,
+        0
+    );
+
+    rocket.rotation.set(
+        0,
+        0,
+        0
+    );
+
+
+    earthGroup.rotation.set(
+        0,
+        0,
+        0
+    );
+
+
+    launchpad.visible=true;
+
+
+    throttleInput.value=0;
+    pitchInput.value=0;
+
+
+    document.getElementById(
+        "stage"
+    ).textContent="1";
+
+
+    document.getElementById(
+        "countdown"
+    ).textContent="READY";
+
+
+    document.getElementById(
+        "phase"
+    ).textContent=
+        "PRE-LAUNCH";
+
+
+    document.getElementById(
+        "engineBtn"
+    ).classList.add(
+        "active"
+    );
+}
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+addEventListener(
+    "resize",
+    ()=>{
+
+        camera.aspect=
+            innerWidth/
+            innerHeight;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(
+            innerWidth,
+            innerHeight
+        );
+    }
+);
+
+
+/* =========================================================
+   MAIN LOOP
+========================================================= */
+
+let previous=
+    performance.now();
+
+
+function animate(now){
+
+    requestAnimationFrame(
+        animate
+    );
+
+
+    const dt=
+        Math.min(
+            .035,
+            (
+                now-
+                previous
+            )/1000
+        );
+
+    previous=now;
+
+
+    physics(dt);
+
+    updateCamera();
+
+    updateTrajectory();
+
+    updateUI();
+
+
+    /* engine vibration */
+
+    if(
+        state.launched &&
+        state.engine &&
+        state.throttle>0
+    ){
+
+        const vibration=
+            state.throttle/
+            1000;
+
+        rocket.position.x=
+            Math.sin(
+                now*.045
+            )*
+            vibration;
+
+        rocket.position.z=
+            Math.cos(
+                now*.052
+            )*
+            vibration;
+
+    }else{
+
+        rocket.position.x=0;
+        rocket.position.z=0;
+    }
+
+
+    /* atmosphere */
+
+    const altitudeFade=
+        Math.min(
+            1,
+            state.altitude/
+            120
+        );
+
+    atmosphere.material.opacity=
+        .13*
+        (1-altitudeFade*.7);
+
+
+    renderer.render(
+        scene,
+        camera
+    );
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+reset();
+
+animate(
+    performance.now()
+);
+
+</script>
+
+</body>
+</html>

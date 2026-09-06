@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8">
+    <title>Grid 棋盤練習場</title>
+    <style>
+      .board {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+ 
+      .cell {
+        height: 100px;
+        background-color: #bae6fd;
+        border-radius: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>棋盤練習場</h1>
+    <div class="board">
+      <div class="cell" >⭕</div>
+      <div class="cell">⭕</div>
+      <div class="cell">❌</div>
+      <div class="cell"></div>
+      <div class="cell">❌</div>
+      <div class="cell"></div>
+      <div class="cell">⭕</div>
+      <div class="cell">❌</div>
+      <div class="cell"></div>
+
+    </div>
+  </body>
+</html>
