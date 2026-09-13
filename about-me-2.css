@@ -1,0 +1,979 @@
+/* =========================================
+   RESET
+========================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans TC",
+        sans-serif;
+
+    background: #f4f1ea;
+    color: #252525;
+
+    min-height: 100vh;
+
+    padding: 50px 20px;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================
+   BACKGROUND DETAILS
+========================================= */
+
+.bg-dots {
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: 0.35;
+
+    background-image: radial-gradient(
+        #252525 1px,
+        transparent 1px
+    );
+
+    background-size: 24px 24px;
+
+    mask-image: linear-gradient(
+        to bottom,
+        black,
+        transparent 70%
+    );
+}
+
+.floating-shape {
+    position: fixed;
+
+    width: 100px;
+    height: 100px;
+
+    border: 3px solid #252525;
+
+    pointer-events: none;
+
+    z-index: -1;
+}
+
+.shape-1 {
+    top: 12%;
+    left: 5%;
+
+    border-radius: 50%;
+
+    background: #ffd966;
+
+    animation: float 6s ease-in-out infinite;
+}
+
+.shape-2 {
+    right: 7%;
+    top: 30%;
+
+    width: 45px;
+    height: 45px;
+
+    background: #ff8c8c;
+
+    transform: rotate(20deg);
+
+    animation: spin-float 8s ease-in-out infinite;
+}
+
+.shape-3 {
+    bottom: 10%;
+    left: 8%;
+
+    width: 55px;
+    height: 55px;
+
+    border-radius: 12px;
+
+    background: #9bdcff;
+
+    transform: rotate(15deg);
+
+    animation: float 7s ease-in-out infinite reverse;
+}
+
+
+/* =========================================
+   MAIN CARD
+========================================= */
+
+.about-me {
+    position: relative;
+
+    max-width: 850px;
+
+    margin: auto;
+
+    background: #fffdf8;
+
+    border: 2px solid #252525;
+
+    border-radius: 24px;
+
+    padding: 55px;
+
+    box-shadow: 8px 8px 0 #252525;
+
+    animation: page-enter 0.7s ease-out;
+
+    overflow: hidden;
+}
+
+
+/* Little corner decoration */
+
+.about-me::before {
+    content: "";
+
+    position: absolute;
+
+    width: 120px;
+    height: 120px;
+
+    top: -60px;
+    right: -60px;
+
+    border-radius: 50%;
+
+    background: #ffd966;
+
+    opacity: 0.5;
+}
+
+
+/* =========================================
+   INTRO
+========================================= */
+
+.intro {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 40px;
+}
+
+.intro-text {
+    flex: 1;
+
+    animation: slide-left 0.7s ease-out;
+}
+
+.small-text,
+.section-label {
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+    color: #777;
+
+    margin-bottom: 12px;
+}
+
+h1 {
+    font-size: clamp(38px, 7vw, 64px);
+
+    line-height: 1.1;
+
+    margin-bottom: 22px;
+
+    letter-spacing: -2px;
+}
+
+h1 span:first-of-type {
+    color: #ff5c5c;
+
+    position: relative;
+}
+
+h1 span:first-of-type::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    bottom: -4px;
+
+    width: 100%;
+    height: 5px;
+
+    background: #ff5c5c;
+
+    border-radius: 10px;
+
+    transform: rotate(-2deg);
+
+    animation: underline 1s ease-out;
+}
+
+.wave {
+    display: inline-block;
+
+    margin-left: 8px;
+
+    font-size: 0.7em;
+
+    animation: wave 2s ease-in-out infinite;
+}
+
+.description {
+    font-size: 17px;
+
+    line-height: 1.8;
+
+    color: #555;
+
+    margin-bottom: 5px;
+}
+
+.blink {
+    animation: blink 1.5s infinite;
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 18px;
+
+    padding: 7px 12px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 20px;
+
+    background: #f7f7f7;
+
+    font-family: monospace;
+
+    font-size: 12px;
+
+    color: #666;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #50c878;
+
+    box-shadow: 0 0 0 0 rgba(80, 200, 120, 0.5);
+
+    animation: pulse 2s infinite;
+}
+
+
+/* =========================================
+   AVATAR
+========================================= */
+
+.avatar-wrapper {
+    position: relative;
+
+    animation: slide-right 0.7s ease-out;
+}
+
+.profile-img {
+    width: 150px;
+    height: 150px;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    border: 3px solid #252525;
+
+    background: #ffd966;
+
+    transform: rotate(3deg);
+
+    box-shadow: 5px 5px 0 #252525;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.profile-img:hover {
+    transform:
+        rotate(-4deg)
+        translateY(-5px)
+        scale(1.05);
+
+    box-shadow:
+        8px 10px 0 #252525;
+}
+
+.sparkle {
+    position: absolute;
+
+    font-size: 24px;
+
+    color: #ffb800;
+
+    z-index: 2;
+
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+.sparkle-1 {
+    top: -15px;
+    right: -10px;
+}
+
+.sparkle-2 {
+    bottom: 5px;
+    left: -20px;
+
+    font-size: 16px;
+
+    animation-delay: 0.8s;
+}
+
+
+/* =========================================
+   DIVIDER
+========================================= */
+
+hr {
+    border: none;
+
+    border-top: 2px dashed #bbb;
+
+    margin: 50px 0;
+}
+
+
+/* =========================================
+   HOBBIES
+========================================= */
+
+.hobby h2,
+.recommend h2 {
+    font-size: 30px;
+
+    margin-bottom: 25px;
+}
+
+.hobby-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 18px;
+}
+
+.hobby-card {
+    position: relative;
+
+    overflow: hidden;
+
+    border: 2px solid #252525;
+
+    border-radius: 16px;
+
+    padding: 25px;
+
+    min-height: 200px;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.hobby-card:hover {
+    transform: translateY(-8px) rotate(-1deg);
+
+    box-shadow: 6px 8px 0 #252525;
+}
+
+.hobby-card:nth-child(1) {
+    background: #dff4ff;
+}
+
+.hobby-card:nth-child(2) {
+    background: #fff0c7;
+}
+
+.hobby-card:nth-child(3) {
+    background: #ffe0e0;
+}
+
+
+/* Card number */
+
+.card-number {
+    position: absolute;
+
+    top: 12px;
+    right: 15px;
+
+    font-size: 11px;
+
+    font-family: monospace;
+
+    color: #888;
+}
+
+
+/* Emoji */
+
+.emoji {
+    font-size: 32px;
+
+    margin-bottom: 10px;
+
+    transition: transform 0.2s ease;
+}
+
+.hobby-card:hover .emoji {
+    transform: scale(1.2) rotate(-8deg);
+}
+
+.hobby-card h3 {
+    font-size: 20px;
+
+    margin-bottom: 12px;
+}
+
+.hobby-card p,
+.hobby-card li {
+    color: #555;
+
+    line-height: 1.7;
+}
+
+.hobby-card ul {
+    padding-left: 20px;
+}
+
+
+/* =========================================
+   GAME CARD DETAIL
+========================================= */
+
+.card-decoration {
+    position: absolute;
+
+    right: -5px;
+    bottom: 5px;
+
+    font-family: monospace;
+
+    font-size: 28px;
+
+    font-weight: bold;
+
+    color: rgba(0, 0, 0, 0.07);
+
+    transform: rotate(-10deg);
+}
+
+
+/* =========================================
+   MUSIC ANIMATION
+========================================= */
+
+.music-bars {
+    position: absolute;
+
+    right: 20px;
+    bottom: 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 3px;
+
+    height: 25px;
+}
+
+.music-bars span {
+    display: block;
+
+    width: 4px;
+
+    height: 10px;
+
+    border-radius: 5px;
+
+    background: #252525;
+
+    animation: music 0.8s ease-in-out infinite alternate;
+}
+
+.music-bars span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.music-bars span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+.music-bars span:nth-child(4) {
+    animation-delay: 0.1s;
+}
+
+.music-bars span:nth-child(5) {
+    animation-delay: 0.3s;
+}
+
+
+/* =========================================
+   NO SPORT
+========================================= */
+
+.no-sport {
+    position: absolute;
+
+    right: 18px;
+    bottom: 12px;
+
+    font-size: 35px;
+
+    font-weight: 900;
+
+    color: rgba(255, 70, 70, 0.15);
+
+    transform: rotate(-8deg);
+}
+
+
+/* =========================================
+   RECOMMENDATION
+========================================= */
+
+.recommend {
+    margin-top: 55px;
+
+    padding: 30px;
+
+    background: #252525;
+
+    color: white;
+
+    border-radius: 18px;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.recommend::after {
+    content: "";
+
+    position: absolute;
+
+    width: 160px;
+    height: 160px;
+
+    right: -70px;
+    bottom: -70px;
+
+    border: 30px solid #ff6b6b;
+
+    border-radius: 50%;
+
+    opacity: 0.15;
+}
+
+.recommend-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+}
+
+.recommend .section-label {
+    color: #aaa;
+}
+
+.recommend h2 {
+    margin-bottom: 8px;
+}
+
+.recommend > p {
+    color: #ccc;
+
+    margin-bottom: 20px;
+}
+
+.mini-star {
+    font-size: 35px;
+
+    color: #ffd966;
+
+    animation: spin 4s linear infinite;
+}
+
+form {
+    display: flex;
+
+    gap: 10px;
+}
+
+textarea {
+    flex: 1;
+
+    resize: vertical;
+
+    min-height: 55px;
+
+    padding: 14px;
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    border: 2px solid #555;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #333;
+
+    color: white;
+
+    transition: border 0.2s ease;
+}
+
+textarea::placeholder {
+    color: #999;
+}
+
+textarea:focus {
+    border-color: #ff6b6b;
+
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.15);
+}
+
+button {
+    align-self: stretch;
+
+    padding: 0 22px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #ff6b6b;
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+button:hover {
+    background: #ff4d4d;
+
+    transform: translateY(-3px);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+button span {
+    display: inline-block;
+
+    transition: transform 0.2s ease;
+}
+
+button:hover span {
+    transform: translateX(4px);
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+footer {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-top: 30px;
+
+    font-size: 13px;
+
+    color: #888;
+}
+
+footer a {
+    color: #252525;
+
+    font-weight: bold;
+
+    text-decoration: none;
+
+    transition: color 0.2s ease;
+}
+
+footer a:hover {
+    color: #ff5c5c;
+}
+
+
+/* =========================================
+   ANIMATIONS
+========================================= */
+
+@keyframes page-enter {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slide-left {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slide-right {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes underline {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes wave {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(20deg);
+    }
+
+    50% {
+        transform: rotate(-10deg);
+    }
+
+    75% {
+        transform: rotate(20deg);
+    }
+}
+
+@keyframes blink {
+    0%, 45% {
+        opacity: 1;
+    }
+
+    50%, 100% {
+        opacity: 0.35;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(80, 200, 120, 0.5);
+    }
+
+    70% {
+        box-shadow: 0 0 0 8px rgba(80, 200, 120, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(80, 200, 120, 0);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-15px) rotate(5deg);
+    }
+}
+
+@keyframes spin-float {
+    0%, 100% {
+        transform: translateY(0) rotate(20deg);
+    }
+
+    50% {
+        transform: translateY(-12px) rotate(40deg);
+    }
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(0.8) rotate(0deg);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2) rotate(20deg);
+    }
+}
+
+@keyframes music {
+    from {
+        height: 5px;
+    }
+
+    to {
+        height: 25px;
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 650px) {
+
+    body {
+        padding: 20px 12px;
+    }
+
+    .about-me {
+        padding: 30px 22px;
+
+        box-shadow: 5px 5px 0 #252525;
+    }
+
+    .intro {
+        flex-direction: column-reverse;
+
+        align-items: flex-start;
+    }
+
+    .profile-img {
+        width: 120px;
+        height: 120px;
+    }
+
+    .hobby-grid {
+        grid-template-columns: 1fr;
+    }
+
+    form {
+        flex-direction: column;
+    }
+
+    button {
+        padding: 14px;
+    }
+
+    footer {
+        flex-direction: column;
+
+        gap: 15px;
+
+        align-items: flex-start;
+    }
+
+    .floating-shape {
+        opacity: 0.4;
+    }
+}
+
+
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+
+        scroll-behavior: auto !important;
+
+        transition-duration: 0.01ms !important;
+    }
+}

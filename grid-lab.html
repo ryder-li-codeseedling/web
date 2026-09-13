@@ -3,13 +3,27 @@
   <head>
     <meta charset="UTF-8">
     <title>Grid 棋盤練習場</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
       .board {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 12px;
       }
- 
+      
+      /* 平板：900px 以內變 2 欄 */
+      @media (max-width: 900px) {
+        .board {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      
+      /* 手機：600px 以內變 1 欄 */
+      @media (max-width: 600px) {
+        .board {
+          grid-template-columns: 1fr;
+        }
+      }
       .cell {
         height: 100px;
         background-color: #bae6fd;
